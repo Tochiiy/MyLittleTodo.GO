@@ -1,0 +1,67 @@
+{
+  "info": {
+    "name": "MyLittleTodo API Tests",
+    "description": "End-to-end test collection for MyLittleTodo API",
+    "version": "1.0.0"
+  },
+  "requests": [
+    {
+      "name": "1. Health Check",
+      "method": "GET",
+      "url": "http://localhost:8000/health",
+      "headers": {},
+      "body": null
+    },
+    {
+      "name": "2. Get All Todos",
+      "method": "GET",
+      "url": "http://localhost:8000/api/mylittletodos",
+      "headers": {},
+      "body": null
+    },
+    {
+      "name": "3. Create Todo",
+      "method": "POST",
+      "url": "http://localhost:8000/api/mylittletodos",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "body": "New test todo",
+        "completed": false
+      }
+    },
+    {
+      "name": "4. Get Single Todo",
+      "method": "GET",
+      "url": "http://localhost:8000/api/mylittletodos/{{todoId}}",
+      "headers": {},
+      "body": null,
+      "note": "Replace {{todoId}} with actual todo ID from Get All Todos response"
+    },
+    {
+      "name": "5. Update Todo",
+      "method": "PUT",
+      "url": "http://localhost:8000/api/mylittletodos/{{todoId}}",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "body": "Updated todo text",
+        "completed": true
+      },
+      "note": "Replace {{todoId}} with actual todo ID"
+    },
+    {
+      "name": "6. Delete Todo",
+      "method": "DELETE",
+      "url": "http://localhost:8000/api/mylittletodos/{{todoId}}",
+      "headers": {},
+      "body": null,
+      "note": "Replace {{todoId}} with actual todo ID"
+    }
+  ],
+  "notes": {
+    "setup": "1. Run 'go run seed.go seed' to populate database with test data\n2. Start server with 'air'\n3. Use Thunder Client or Postman to test endpoints\n4. Replace {{todoId}} with actual IDs from responses"
+  }
+}

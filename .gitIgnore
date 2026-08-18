@@ -1,0 +1,39 @@
+# Environment variables
+.env
+.env.local
+
+# Build & Binary
+/tmp
+/bin
+/dist
+/build
+*.exe
+
+# Go
+vendor/
+go.sum
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Node (if frontend uses node)
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Air (live reload)
+/tmp/
+
+# Dependencies
+go.mod.bak
