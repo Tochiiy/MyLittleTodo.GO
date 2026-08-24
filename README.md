@@ -1,6 +1,6 @@
 # ✅ MyLittleTodo.GO
 
-A full-stack todo app with per-user authentication.
+A full-stack todo app with per-user authentication and a landing page.
 **Go (Fiber) + MongoDB** backend · **React + Vite + Chakra UI** frontend · **JWT** auth.
 
 ## 🌐 Live Demo
@@ -13,13 +13,14 @@ Create a free account and start organizing — no setup needed.
 
 ## ✨ Features
 
+- 🏠 **Landing page** — hero, feature showcase, smooth-scroll CTA
 - 🔐 **Per-user auth** — register / login with JWT (72h tokens)
-- 🙈 **Password security** — bcrypt hashing, show/hide toggle
+- 🙈 **Password security** — bcrypt hashing + show/hide eye toggle
 - 📝 **Full CRUD** — create, complete, delete your own todos
 - 👤 **User isolation** — every todo is scoped to its owner
 - 🌙 **Dark mode** — persisted toggle
 - 📱 **Responsive** — centered layout, works on all screens
-- 🐳 **Dockerized** — one command to run everything
+- 🚀 **Deployed** — Vercel (frontend) + Render (backend)
 
 ---
 
@@ -27,15 +28,19 @@ Create a free account and start organizing — no setup needed.
 
 ```
 MyLittleTodo.GO/
-├── 📁 backend/          # Go Fiber API
-│   ├── 📁 config/       #   DB connection & schemas
-│   ├── 📁 routes/       #   auth, todos, health
-│   └── 🐳 Dockerfile
-├── 📁 frontend/         # React + Vite + Chakra UI
-│   ├── 📁 src/api/      #   API client
-│   ├── 📁 src/components/
-│   └── 🐳 Dockerfile
-└── 🐳 docker-compose.yml
+├── 📁 backend/              # Go Fiber API
+│   ├── 📁 config/           #   DB connection & schemas
+│   ├── 📁 routes/           #   auth, todos, health
+│   ├── 🐳 Dockerfile
+│   └── 🔑 .env.example
+├── 📁 frontend/             # React + Vite + Chakra UI
+│   ├── 📁 src/api/          #   API client (token handling)
+│   ├── 📁 src/components/   #   Landing, Auth, Todos, providers
+│   ├── 🐳 Dockerfile        #   nginx + API proxy
+│   ├── ⚙️ vercel.json       #   production rewrites
+│   └── 🔑 .env.example
+├── 🐳 docker-compose.yml    # full stack in one command
+└── ⚙️ render.yaml           # Render blueprint (backend)
 ```
 
 ---
@@ -55,7 +60,7 @@ go run .
 
 ```bash
 cd frontend
-cp .env.example .env        # ✏️ set VITE_API_URL (empty = same origin)
+cp .env.example .env        # ✏️ set VITE_API_URL (empty = same origin via Vite proxy)
 npm install
 npm run dev
 # ▶️ App running on http://localhost:5173
@@ -86,9 +91,9 @@ docker compose up --build
 
 ### Frontend (`frontend/.env`)
 
-| Variable      | Description                                              |
-| ------------- | -------------------------------------------------------- |
-| `VITE_API_URL`| Backend URL. **Empty = same origin** (proxy/rewrite)     |
+| Variable       | Description                                          |
+| -------------- | ---------------------------------------------------- |
+| `VITE_API_URL` | Backend URL. **Empty = same origin** (proxy/rewrite) |
 
 > 💡 **Easy switching:** copy `.env.example` → `.env` in each folder.
 > Never commit real `.env` files — they are git-ignored.
@@ -96,6 +101,8 @@ docker compose up --build
 ---
 
 ## 📡 API Endpoints
+
+Base URL (production): `https://mylittletodo-go.onrender.com`
 
 | Method   | Endpoint                 | Auth | Description        |
 | -------- | ------------------------ | ---- | ------------------ |
@@ -112,36 +119,24 @@ docker compose up --build
 
 ---
 
-## 🌍 Deploy (Production)
+## 🌍 Deployment
 
-### Backend → Render
+| Piece    | Platform | URL                                        |
+| -------- | -------- | ------------------------------------------ |
+| Frontend | ▲ Vercel | https://mylittle2do.vercel.app             |
+| Backend  | 🟢 Render| https://mylittletodo-go.onrender.com       |
 
-1. Push this repo to GitHub
-2. On [Render](https://render.com): **New → Blueprint** → select the repo
-   (`render.yaml` is auto-detected)
-3. Set `MONGODB_URI` when prompted (Atlas connection string)
+- **Backend (Render):** Blueprint from `render.yaml` — Docker runtime, free plan,
+  auto health checks on `/health`
+- **Frontend (Vercel):** auto-deploys on push to `main`; `/api/*` requests are
+  rewritten to the Render backend via `frontend/vercel.json`
 
-### Frontend → Vercel
+> ⚠️ Render free tier spins down after 15 min idle — first request may take ~30-50s.
 
-1. On [Vercel](https://vercel.com): **Add New → Project** → import the repo
-2. **Root directory:** `frontend`
-3. Edit `frontend/vercel.json` → replace `REPLACE-WITH-YOUR-RENDER-URL`
-   with your Render API URL
-4. Deploy ✅
-
-### 🐳 Or anywhere with Docker
+### 🐳 Or self-host with Docker
 
 ```bash
 docker compose up --build -d
-```
-
----
-
-## 🧪 Testing
-
-```bash
-cd backend
-go run seed.go seed    # 🌱 seed 5 sample todos
 ```
 
 ---
