@@ -11,6 +11,7 @@ import {
 import {
   FaCheckCircle,
   FaCloudUploadAlt,
+  FaHeart,
   FaLock,
   FaMobileAlt,
   FaMoon,
@@ -191,9 +192,15 @@ export function Landing() {
 
       {/* Footer */}
       <Box as="footer" py={6} textAlign="center">
-        <Text fontSize="sm" color="gray.400">
-          ✓ MyLittleTodo — built with Go, React & MongoDB
-        </Text>
+        <HStack justify="center" gap={2}>
+          <Text fontSize="sm" color="gray.400">
+            Built with
+          </Text>
+          <FaHeart color="red.500" aria-hidden />
+          <Text fontSize="sm" color="gray.400">
+            — MyLittleTodo
+          </Text>
+        </HStack>
       </Box>
     </Box>
   )
