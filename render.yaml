@@ -1,11 +1,11 @@
 services:
   - type: web
     name: mylittletodo-api
-    runtime: go
+    runtime: docker
     rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     plan: free
-    buildCommand: go build -o todo-server .
-    startCommand: ./todo-server
     healthCheckPath: /health
     envVars:
       - key: MONGODB_URI
