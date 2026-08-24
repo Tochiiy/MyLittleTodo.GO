@@ -3,6 +3,12 @@
 A full-stack todo app with per-user authentication.
 **Go (Fiber) + MongoDB** backend · **React + Vite + Chakra UI** frontend · **JWT** auth.
 
+## 🌐 Live Demo
+
+> ### 👉 [https://mylittle2do.vercel.app](https://mylittle2do.vercel.app)
+
+Create a free account and start organizing — no setup needed.
+
 ---
 
 ## ✨ Features
