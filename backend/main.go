@@ -14,6 +14,7 @@ import (
 func main() {
 	godotenv.Load()
 	config.ConnectToDB()
+	config.InitCollections()
 	port := os.Getenv("PORT")
 	fmt.Println("Server is running on port", port)
 

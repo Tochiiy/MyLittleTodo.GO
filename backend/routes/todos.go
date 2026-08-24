@@ -12,15 +12,20 @@ import (
 // Todo Schema
 type Todo struct {
 	ID        primitive.ObjectID `bson:"_id" json:"id,omitempty"`
+	UserID    primitive.ObjectID `bson:"userId" json:"-"`
 	Body      string             `bson:"body" json:"body"`
 	Completed bool               `bson:"completed" json:"completed"`
 }
 
-// GetAllTodos - Get all todos
+func getUserID(c *fiber.Ctx) primitive.ObjectID {
+	return c.Locals("userId").(primitive.ObjectID)
+}
+
+// GetAllTodos - Get all todos for the authenticated user
 func GetAllTodos(c *fiber.Ctx) error {
 	var todos []Todo
 
-	cursor, err := config.TodosCollection.Find(context.Background(), bson.M{})
+	cursor, err := config.TodosCollection.Find(context.Background(), bson.M{"userId": getUserID(c)})
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"error": "Failed to fetch todos",
@@ -52,7 +57,7 @@ func GetTodoByID(c *fiber.Ctx) error {
 	}
 
 	var todo Todo
-	err = config.TodosCollection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&todo)
+	err = config.TodosCollection.FindOne(context.Background(), bson.M{"_id": objectID, "userId": getUserID(c)}).Decode(&todo)
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
 			"error": "Todo not found",
@@ -79,6 +84,7 @@ func CreateTodo(c *fiber.Ctx) error {
 	}
 
 	todo.ID = primitive.NewObjectID()
+	todo.UserID = getUserID(c)
 
 	insertResult, err := config.TodosCollection.InsertOne(context.Background(), todo)
 	if err != nil {
@@ -109,16 +115,22 @@ func UpdateTodo(c *fiber.Ctx) error {
 		})
 	}
 
-	filter := bson.M{"_id": objectID}
+	filter := bson.M{"_id": objectID, "userId": getUserID(c)}
 	update := bson.M{"$set": bson.M{
 		"body":      todo.Body,
 		"completed": todo.Completed,
 	}}
 
-	_, err = config.TodosCollection.UpdateOne(context.Background(), filter, update)
+	result, err := config.TodosCollection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"error": "Failed to update todo",
+		})
+	}
+
+	if result.MatchedCount == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"error": "Todo not found",
 		})
 	}
 
@@ -137,7 +149,7 @@ func DeleteTodo(c *fiber.Ctx) error {
 		})
 	}
 
-	filter := bson.M{"_id": objectID}
+	filter := bson.M{"_id": objectID, "userId": getUserID(c)}
 	result, err := config.TodosCollection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{

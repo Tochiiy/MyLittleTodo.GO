@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mylittletodo-api
+    runtime: go
+    rootDir: backend
+    plan: free
+    buildCommand: go build -o todo-server .
+    startCommand: ./todo-server
+    healthCheckPath: /health
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: https://mylittletodo.vercel.app,http://localhost:5173

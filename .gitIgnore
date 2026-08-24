@@ -1,17 +1,22 @@
-# Environment variables
+# Environment variables (never commit real secrets)
 .env
 .env.local
+.env.*.local
 
 # Build & Binary
-/tmp
-/bin
-/dist
-/build
+backend/tmp/
+backend/todo-server.exe
+frontend/dist/
+dist/
+build/
 *.exe
 
 # Go
 vendor/
-go.sum
+
+# Node
+node_modules/
+npm-debug.log*
 
 # IDE
 .vscode/
@@ -26,14 +31,7 @@ Thumbs.db
 
 # Logs
 *.log
+.playwright-mcp/
 
-# Node (if frontend uses node)
-node_modules/
-npm-debug.log
-package-lock.json
-
-# Air (live reload)
-/tmp/
-
-# Dependencies
+# Dependencies backup
 go.mod.bak
